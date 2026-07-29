@@ -254,15 +254,17 @@
         }
     }
 
-    // --- Application State ---
-    // --- Application State ---
+    // ==========================================
+    // ⚠️ FINAL API FIX SECTION - DO NOT CHANGE
+    // ==========================================
     let currentMode = 'general';
     
-    // Aapki exact API Key
+    // Aapki API Key (Bilkul sahi hai)
     const API_KEY = "AQ.Ab8RN6Il21PC6nwRiqEtj1vqbuj-awUoV0m-nQcwjVIN_OQC8g"; 
+    
+    // API URL se ?key= hata diya hai, sirf model ka naam rakha hai
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
-    // ⚠️ FIXED: Plus (+) sign ka use kiya hai taaki koi string format error na aaye
-    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
     // --- Voice Initialization ---
     let speechVoices = [];
     window.speechSynthesis.onvoiceschanged = () => { speechVoices = window.speechSynthesis.getVoices(); };
@@ -413,15 +415,18 @@
         }
 
         try {
+            // Naya fetch method jisme Key Header me jayegi
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': API_KEY // <--- API Key yahan se ja rahi hai
+                },
                 body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt + text }] }] })
             });
             
             const data = await response.json();
             
-            // ⚠️ FIXED: Added Error Checking Block
             if (data.candidates && data.candidates.length > 0) {
                 const botReply = data.candidates[0].content.parts[0].text;
                 addMessage(botReply, 'bot');
