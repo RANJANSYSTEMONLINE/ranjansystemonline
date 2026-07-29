@@ -255,12 +255,14 @@
     }
 
     // --- Application State ---
+    // --- Application State ---
     let currentMode = 'general';
-    const API_KEY = 'AQ.Ab8RN6JrpQEgrLvEYAGo262XF6PtJV7TnECfWule4ujCkgD5Hw'; 
-    // ⚠️ FIXED: Updated API Model Name to gemini-1.5-flash
-    // ⚠️ FIXED: Updated API Model Name to gemini-2.5-flash
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+    
+    // Aapki exact API Key
+    const API_KEY = "AQ.Ab8RN6JrpQEgrLvEYAGo262XF6PtJV7TnECfWule4ujCkgD5Hw"; 
 
+    // ⚠️ FIXED: Plus (+) sign ka use kiya hai taaki koi string format error na aaye
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
     // --- Voice Initialization ---
     let speechVoices = [];
     window.speechSynthesis.onvoiceschanged = () => { speechVoices = window.speechSynthesis.getVoices(); };
