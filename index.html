@@ -257,7 +257,9 @@
     // --- Application State ---
     let currentMode = 'general';
     const API_KEY = 'AQ.Ab8RN6JLB80lIha610V8iwefO8llitINIbq6VB_EGjYwv7lcLA'; 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+    
+    // ⚠️ FIXED: Updated API Model Name to gemini-1.5-flash
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     // --- Voice Initialization ---
     let speechVoices = [];
@@ -376,7 +378,6 @@
         document.getElementById('homepage').style.display = 'none';
         document.getElementById('top-nav').style.display = 'none';
         document.getElementById('chat-box').style.display = 'flex';
-        // Removed audio play from here so it doesn't overlap with boot screen audio
     }
 
     function closeChat() {
@@ -418,16 +419,21 @@
             
             const data = await response.json();
             
+            // ⚠️ FIXED: Added Error Checking Block
             if (data.candidates && data.candidates.length > 0) {
                 const botReply = data.candidates[0].content.parts[0].text;
                 addMessage(botReply, 'bot');
                 saveToHistory(botReply, 'bot'); 
                 speakAIResponse(botReply);
+            } else if (data.error) {
+                addMessage(`API Error: ${data.error.message}`, 'bot');
+                console.error("Google API Error:", data.error);
             } else {
                 addMessage("System Error: No valid response data received.", 'bot');
             }
         } catch (error) {
             addMessage("Connection Failure. Please verify network or API token.", 'bot');
+            console.error("Fetch Error:", error);
         }
     }
 
